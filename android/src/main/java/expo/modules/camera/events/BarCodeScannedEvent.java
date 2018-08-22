@@ -3,31 +3,29 @@ package expo.modules.camera.events;
 import android.os.Bundle;
 import android.support.v4.util.Pools;
 
-import com.google.android.gms.vision.barcode.Barcode;
-
 import expo.core.interfaces.services.EventEmitter;
+import expo.interfaces.barcodescanner.BarCodeScannerResult;
 import expo.modules.camera.CameraViewManager;
-import expo.modules.camera.utils.ExpoBarCodeDetector;
 
-public class BarCodeReadEvent extends EventEmitter.BaseEvent {
-  private static final Pools.SynchronizedPool<BarCodeReadEvent> EVENTS_POOL =
+public class BarCodeScannedEvent extends EventEmitter.BaseEvent {
+  private static final Pools.SynchronizedPool<BarCodeScannedEvent> EVENTS_POOL =
       new Pools.SynchronizedPool<>(3);
 
-  private ExpoBarCodeDetector.Result mBarCode;
+  private BarCodeScannerResult mBarCode;
   private int mViewTag;
 
-  private BarCodeReadEvent() {}
+  private BarCodeScannedEvent() {}
 
-  public static BarCodeReadEvent obtain(int viewTag, ExpoBarCodeDetector.Result barCode) {
-    BarCodeReadEvent event = EVENTS_POOL.acquire();
+  public static BarCodeScannedEvent obtain(int viewTag, BarCodeScannerResult barCode) {
+    BarCodeScannedEvent event = EVENTS_POOL.acquire();
     if (event == null) {
-      event = new BarCodeReadEvent();
+      event = new BarCodeScannedEvent();
     }
     event.init(viewTag, barCode);
     return event;
   }
 
-  private void init(int viewTag, ExpoBarCodeDetector.Result barCode) {
+  private void init(int viewTag, BarCodeScannerResult barCode) {
     mViewTag = viewTag;
     mBarCode = barCode;
   }
@@ -47,7 +45,7 @@ public class BarCodeReadEvent extends EventEmitter.BaseEvent {
 
   @Override
   public String getEventName() {
-    return CameraViewManager.Events.EVENT_ON_BAR_CODE_READ.toString();
+    return CameraViewManager.Events.EVENT_ON_BAR_CODE_SCANNED.toString();
   }
 
   @Override
